@@ -1,84 +1,121 @@
-# unplugin-condition-compile
-条件编译插件，可以通过注释语法，使代码块针对不同情况进行可选择的编译和剔除
+# unplugin-starter
 
-## 安装
+Starter template for [unplugin](https://github.com/unjs/unplugin).
+
+## Template Usage
+
+To use this template, clone it down using:
+
 ```bash
-npm i -D unplugin-condition-compile
+npx degit yintingwen/unplugin-starter my-unplugin
 ```
+
+And do a global replacement of `unplugin-starter` with your plugin name.
+
+Then you can start developing your unplugin 🔥
+
+To test your plugin, run: `pnpm run dev`
+To release a new version, run: `pnpm run release`
+
+## Install
+
+```bash
+npm i unplugin-starter
+```
+
 <details>
-<summary>Rollup</summary>
+<summary>Vite</summary><br>
+
+```ts
+// vite.config.ts
+import Starter from 'unplugin-starter/vite'
+
+export default defineConfig({
+  plugins: [
+    Starter({ /* options */ }),
+  ],
+})
+```
+
+Example: [`playground/`](./playground/)
+
+<br></details>
+
+<details>
+<summary>Rollup</summary><br>
 
 ```ts
 // rollup.config.js
-import plugin, {rollup as pluginRollup} from 'unplugin-vue-components/rollup'
+import Starter from 'unplugin-starter/rollup'
 
 export default {
+  plugins: [
+    Starter({ /* options */ }),
+  ],
+}
+```
+
+<br></details>
+
+
+<details>
+<summary>Webpack</summary><br>
+
+```ts
+// webpack.config.js
+module.exports = {
+  /* ... */
+  plugins: [
+    require('unplugin-starter/webpack')({ /* options */ })
+  ]
+}
+```
+
+<br></details>
+
+<details>
+<summary>Nuxt</summary><br>
+
+```ts
+// nuxt.config.js
+export default defineNuxtConfig({
+  modules: [
+    ['unplugin-starter/nuxt', { /* options */ }],
+  ],
+})
+```
+
+> This module works for both Nuxt 2 and [Nuxt Vite](https://github.com/nuxt/vite)
+
+<br></details>
+
+<details>
+<summary>Vue CLI</summary><br>
+
+```ts
+// vue.config.js
+module.exports = {
+  configureWebpack: {
     plugins: [
-        plugin.rollup({ /* options */}),
-        pluginRollup({ /* options */})
+      require('unplugin-starter/webpack')({ /* options */ }),
     ],
+  },
 }
 ```
-目前仅调试了rollup
 
-</details>
+<br></details>
 
-## 参数
-```typescript
-interface ConditionCompileOption {
-    target: string;
-    startIncludeTag?: string;
-    startExcludeTag?: string;
-    endTag?: string;
-}
-```
-- target: 编译时指定的条件字符串
-- startIncludeTag: 包含条件的起始标签，默认#ifdef
-- startExcludeTag: 排除条件的起始标签，默认#ifndef
-- endif: 结束标签，默认#endif
+<details>
+<summary>esbuild</summary><br>
 
-## 使用
-使用注释，以 #ifdef 或 #ifndef 开头，以 #endif 结尾。匹配条件可自定义
-```typescript
-// #ifdef target1 || target2 ...
-// #ifndef target1 || target2 || ...
-// #endif
-```
-- #ifdef：仅在该条件中存在
-- #ifndef：在该条件中不存在
-- #endif：结束，就近匹配
-- targetn：匹配目标，和配置项中的target匹配，可通过 || 指定多个目标（或）
+```ts
+// esbuild.config.js
+import { build } from 'esbuild'
+import Starter from 'unplugin-starter/esbuild'
 
-```typescript
-// #ifdef t1 || t2
-console.log('target等于t1和t2时，这块代码才会编译进去')
-// endif
-
-// #ifndef target1 || target2
-console.log('target等于t1或t2时，这块代码会被剔除')
-// endif
+build({
+  plugins: [Starter()],
+})
 ```
 
-## 自定义语法
-可以通过 startIncludeTag，startExcludeTag，endTag 配置项来自定义模板中的语法
-```typescript
-export default {
-    plugins: [
-        plugin.rollup({
-			target: 'wx',
-            startIncludeTag: '$startIncludeTag',
-            startExcludeTag: '!startExcludeTag',
-			endTag: '@endTag'
-		})
-    ],
-}
-```
-```typescript
-// $startIncludeTag wx
-console.log('包含在wx中的code')
-// @endTag
-
-// !startExcludeTag wx
-console.log('不包含在wx中的code')
-// @endTag
-```
+<br></details>
